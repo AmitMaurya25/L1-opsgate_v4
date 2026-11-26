@@ -1,0 +1,5 @@
+# Optional: Foundry-template entrypoint (main.py). Versions UNVERIFIED against organizer SDK - validate first.
+agent-framework
+agent-framework-openai
+agent-framework-foundry-hosting
+python-dotenv

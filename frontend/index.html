@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpsGate L1 Virtual Agent — Interactive UI & Architecture</title>
+  <style>
+    :root {
+      --bg-app: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --bg-hover: #e2e8f0;
+      --border-light: #e2e8f0;
+      --border-medium: #cbd5e1;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent-blue: #2563eb;
+      --accent-blue-soft: #eff6ff;
+      --amber-bg: #fffbeb;
+      --amber-border: #f59e0b;
+      --amber-text: #92400e;
+      --amber-badge: #fef3c7;
+      --red-bg: #fef2f2;
+      --red-border: #ef4444;
+      --red-text: #991b1b;
+      --red-badge: #fee2e2;
+      --green-bg: #f0fdf4;
+      --green-border: #22c55e;
+      --green-text: #166534;
+      --purple-bg: #f5f3ff;
+      --purple-border: #8b5cf6;
+      --purple-text: #5b21b6;
+      --teal-bg: #f0fdfa;
+      --teal-border: #14b8a6;
+      --teal-text: #115e59;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-app);
+      color: var(--text-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Header Bar */
+    .top-bar {
+      height: 56px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .view-switcher {
+      display: inline-flex;
+      background: var(--bg-subtle);
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-light);
+    }
+
+    .view-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .view-btn.active {
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .status-pill {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green-text);
+      background: var(--green-bg);
+      border: 1px solid #bbf7d0;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green-border);
+    }
+
+    /* Main Workspace Container */
+    .workspace {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Multi-Thread Navigation */
+    .sidebar {
+      width: 265px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 14px;
+      gap: 14px;
+      overflow-y: auto;
+    }
+
+    .new-chat-btn {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-medium);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .new-chat-btn:hover {
+      background: var(--bg-subtle);
+    }
+
+    .thread-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 4px 8px;
+    }
+
+    .thread-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .thread-item {
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.12s ease;
+      border: 1px solid transparent;
+    }
+
+    .thread-item:hover {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+
+    .thread-item.active {
+      background: var(--accent-blue-soft);
+      color: var(--accent-blue);
+      font-weight: 600;
+      border-color: #dbeafe;
+    }
+
+    /* Center Column: Gemini-style Chat or Architecture Flow */
+    .center-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--bg-app);
+      position: relative;
+    }
+
+    /* Chat View */
+    .chat-view {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .chat-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 10% 36px 10%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .msg-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 780px;
+      width: 100%;
+      margin: 0 auto;
+      gap: 6px;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: var(--accent-blue-soft);
+      color: var(--text-primary);
+      border: 1px solid #bfdbfe;
+      padding: 12px 16px;
+      border-radius: 18px 18px 4px 18px;
+      max-width: 75%;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .msg-agent {
+      align-self: flex-start;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border-light);
+      padding: 16px 18px;
+      border-radius: 6px 18px 18px 18px;
+      max-width: 92%;
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .agent-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .path-badge {
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
+    }
+
+    .cite-tag {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 1px 6px;
+      border-radius: 5px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .msg-agent ol, .msg-agent ul {
+      margin: 8px 0 10px 20px;
+    }
+
+    .msg-agent li {
+      margin-bottom: 4px;
+    }
+
+    /* On-Demand HITL Escalation Card (only when unresolved / dissatisfied) */
+    .hitl-card {
+      margin-top: 12px;
+      background: var(--amber-bg);
+      border: 1px solid #fcd34d;
+      border-left: 4px solid var(--amber-border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .hitl-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--amber-text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hitl-desc {
+      font-size: 13px;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .payload-box {
+      background: var(--bg-surface);
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #1e293b;
+      white-space: pre-wrap;
+      margin-bottom: 12px;
+    }
+
+    .hitl-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-approve {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-approve:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-cancel {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-medium);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-cancel:hover {
+      background: var(--bg-subtle);
+    }
+
+    .confirmed-banner {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--green-bg);
+      border: 1px solid #86efac;
+      color: var(--green-text);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    /* Bottom Prompt Bar (Gemini-style clean input, no file paperclip) */
+    .composer-wrap {
+      padding: 12px 10% 20px 10%;
+      background: linear-gradient(to top, var(--bg-app) 80%, rgba(248, 250, 252, 0));
+    }
+
+    .composer-box {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      border-radius: 24px;
+      padding: 8px 10px 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .composer-box:focus-within {
+      border-color: var(--accent-blue);
+    }
+
+    .composer-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--text-primary);
+      padding: 6px 0;
+    }
+
+    .send-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--accent-blue);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .quick-prompts {
+      max-width: 780px;
+      margin: 8px auto 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+
+    .chip-btn:hover {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+
+    /* Right Panel: Upper Section Reserved Exclusively for Raised Tickets */
+    .right-panel {
+      width: 320px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .right-upper-tickets {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .panel-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+    }
+
+    .ticket-count-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .ticket-card {
+      border-radius: var(--radius-md);
+      padding: 12px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.12s ease;
+    }
+
+    /* Amber for In-Progress */
+    .ticket-card.in-progress {
+      background: var(--amber-bg);
+      border-color: #fcd34d;
+      border-left: 4px solid var(--amber-border);
+    }
+
+    /* Red for Not Assigned */
+    .ticket-card.not-assigned {
+      background: var(--red-bg);
+      border-color: #fca5a5;
+      border-left: 4px solid var(--red-border);
+    }
+
+    .ticket-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .ticket-id {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .status-chip {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+    }
+
+    .in-progress .status-chip {
+      background: var(--amber-badge);
+      color: var(--amber-text);
+      border: 1px solid #f59e0b;
+    }
+
+    .not-assigned .status-chip {
+      background: var(--red-badge);
+      color: var(--red-text);
+      border: 1px solid #ef4444;
+    }
+
+    .ticket-summary {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .ticket-meta-line {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .ticket-assignee {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.72);
+      padding: 5px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    /* Interactive Architecture State-Graph View */
+    .arch-view {
+      flex: 1;
+      display: none;
+      flex-direction: column;
+      padding: 20px 24px;
+      overflow-y: auto;
+      gap: 16px;
+    }
+
+    .arch-view.active {
+      display: flex;
+    }
+
+    .arch-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+    }
+
+    .sim-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .sim-btn {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-medium);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .sim-btn.active {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    .graph-canvas {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .node-card {
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      background: var(--bg-app);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .node-card:hover {
+      border-color: var(--accent-blue);
+    }
+
+    .node-card.highlighted {
+      border-color: var(--accent-blue);
+      background: var(--accent-blue-soft);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    .node-step {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      margin-bottom: 4px;
+    }
+
+    .node-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .node-io {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .inspector-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .inspector-box pre {
+      margin-top: 8px;
+      background: var(--bg-app);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Header Bar: Strictly OpsGate L1 Virtual Agent -->
+  <header class="top-bar">
+    <div class="brand-title">
+      <span class="brand-dot"></span>
+      <span>OpsGate L1 Virtual Agent</span>
+    </div>
+    <div class="top-controls">
+      <div class="view-switcher">
+        <button class="view-btn active" id="btnChatView" onclick="switchView('chat')">Chat Assistant</button>
+        <button class="view-btn" id="btnArchView" onclick="switchView('arch')">Agent Flow & Architecture</button>
+      </div>
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span>IT Service Desk Active</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <!-- Left Sidebar: Multi-Thread Conversation History -->
+    <aside class="sidebar">
+      <button class="new-chat-btn" onclick="startNewThread()">
+        <span>+</span>
+        <span>New chat</span>
+      </button>
+
+      <div>
+        <div class="thread-group-label">Today</div>
+        <div class="thread-list" id="todayThreads"></div>
+      </div>
+
+      <div>
+        <div class="thread-group-label">Earlier</div>
+        <div class="thread-list" id="earlierThreads"></div>
+      </div>
+    </aside>
+
+    <!-- Center Pane: Minimal Gemini-Like Chat or Interactive Architecture -->
+    <main class="center-pane">
+      <section class="chat-view" id="chatView">
+        <div class="chat-scroll" id="chatScroll"></div>
+
+        <div class="composer-wrap">
+          <div class="composer-box">
+            <input
+              type="text"
+              id="promptInput"
+              class="composer-input"
+              placeholder="Ask OpsGate L1 Virtual Agent about VPN, MFA, Outlook, or printers..."
+              onkeydown="if(event.key==='Enter') sendMessage()"
+            />
+            <button class="send-btn" onclick="sendMessage()" title="Send">&#10148;</button>
+          </div>
+          <div class="quick-prompts">
+            <button class="chip-btn" onclick="runQuickPrompt('My VPN won\'t connect on macOS')">1. VPN Help (Self-RAG)</button>
+            <button class="chip-btn" onclick="runQuickPrompt('I tried those steps and still get Error 809, cannot resolve this')">2. Unresolved -> HITL Ticket</button>
+            <button class="chip-btn" onclick="runQuickPrompt('Hi, what IT issues can you help me with?')">3. Direct Chat (No Tools/RAG)</button>
+            <button class="chip-btn" onclick="runQuickPrompt('Check my device context and recent VPN error log')">4. Tools & Sandbox</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="arch-view" id="archView">
+        <div class="arch-toolbar">
+          <div>
+            <strong>4-Path Agent Routing & Memory Pipeline</strong>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              Click a simulation path to trace node flow & backend routing rules
+            </div>
+          </div>
+          <div class="sim-buttons">
+            <button class="sim-btn active" onclick="highlightPath('path1', this)">Path 1: Direct Chat</button>
+            <button class="sim-btn" onclick="highlightPath('path2', this)">Path 2: Hybrid Self-RAG</button>
+            <button class="sim-btn" onclick="highlightPath('path3', this)">Path 3: Tools & Sandbox</button>
+            <button class="sim-btn" onclick="highlightPath('path4', this)">Path 4: HITL Ticket & Routing</button>
+          </div>
+        </div>
+
+        <div class="graph-canvas" id="graphCanvas"></div>
+
+        <div class="inspector-box" id="nodeInspector">
+          <strong>Node & Backend Routing Inspector</strong>
+          <div id="inspectorBody">Select any node card above to inspect its exact inputs, outputs, memory scope, and backend ticket-routing rules.</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Panel: Upper Section Reserved Exclusively for Raised Tickets -->
+    <aside class="right-panel">
+      <div class="right-upper-tickets">
+        <div class="panel-title-row">
+          <span class="panel-title">Raised Tickets</span>
+          <span class="ticket-count-badge" id="ticketCountBadge">2</span>
+        </div>
+        <div id="ticketsContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // Backend Routing Table: Maps ticket category to resolver team & assigned engineer
+    const BACKEND_TEAM_ROUTING = {
+      "Network/VPN": { team: "Network-Ops", assignee: "Rohan Verma (L2 Network Engineer)" },
+      "Identity/MFA": { team: "IAM-L2", assignee: "Ananya Nair (Senior IAM Specialist)" },
+      "Messaging/Outlook": { team: "Workplace-Support", assignee: "Vikram Sethi (L2 Messaging Engineer)" },
+      "Hardware/Print": { team: "Endpoint-Field-Ops", assignee: "Pooja Sharma (L2 Endpoint Specialist)" },
+      "NDMC/Portal": { team: "NDMC-Portal-Ops", assignee: "Suresh Kumar (L2 Support Engineer)" }
+    };
+
+    // Initial Tickets shown in Upper Right Panel (Amber = In-Progress, Red = Not Assigned)
+    let tickets = [
+      {
+        id: "INC001248",
+        title: "VPN Access Error 809 on macOS",
+        category: "Network/VPN",
+        priority: "P3",
+        status: "In-Progress",
+        team: "Network-Ops",
+        assignee: "Rohan Verma (L2 Network Engineer)"
+      },
+      {
+        id: "INC001302",
+        title: "MFA Token Reset Request",
+        category: "Identity/MFA",
+        priority: "P2",
+        status: "Not Assigned",
+        team: "IAM-L2",
+        assignee: "Unassigned — Queued for IAM-L2 Triage"
+      }
+    ];
+
+    // Multi-Thread State
+    let threads = [
+      {
+        id: "t-1",
+        group: "today",
+        title: "VPN Connection Error",
+        messages: [
+          {
+            sender: "user",
+            text: "My VPN won't connect on macOS."
+          },
+          {
+            sender: "agent",
+            path: "Path 2 · Hybrid Self-RAG",
+            text: `Checked your macOS context and retrieved <span class="cite-tag">KB-102 §2.1</span>:<ol><li>Open <strong>Cisco AnyConnect</strong> and verify gateway <code>vpn.corp.local</code>.</li><li>Confirm Microsoft Authenticator push approval is enabled.</li><li>Are you seeing <strong>Error 619</strong> or <strong>Error 809</strong>?</li></ol>`
+          }
+        ]
+      },
+      {
+        id: "t-2",
+        group: "today",
+        title: "MFA Reset Request",
+        messages: [
+          {
+            sender: "user",
+            text: "I lost my phone and cannot complete MFA prompt."
+          },
+          {
+            sender: "agent",
+            path: "Path 4 · Unresolved / Privileged",
+            text: `MFA hardware/token reset requires privileged directory verification and cannot be completed automatically.`,
+            hitl: {
+              ticketId: "INC001410",
+              category: "Identity/MFA",
+              urgency: "High",
+              impact: "Individual",
+              priority: "P2",
+              stepsAttempted: ["Verified user session", "Confirmed MFA push failure"],
+              approved: false
+            }
+          }
+        ]
+      },
+      {
+        id: "t-3",
+        group: "earlier",
+        title: "Outlook Profile Sync",
+        messages: [
+          {
+            sender: "user",
+            text: "How do I rebuild my Outlook profile?"
+          },
+          {
+            sender: "agent",
+            path: "Path 2 · Hybrid Self-RAG",
+            text: `Per <span class="cite-tag">KB-204 §1.2</span>, open <strong>Control Panel / Mail</strong>, create a new profile, and sign in with your corporate UPN.`
+          }
+        ]
+      }
+    ];
+
+    let activeThreadId = "t-1";
+
+    // Architecture Nodes Metadata
+    const archNodes = [
+      {
+        id: "guardrail",
+        step: "Ingress & Guardrail",
+        name: "Input Guardrail & L1 Agent",
+        io: "In: query, thread_id | Out: validated intent + 4-way route",
+        paths: ["path1", "path2", "path3", "path4"],
+        detail: "Enforces IT Service Desk scope, blocks credentials/passwords, checks prompt injection, and routes to 1 of 4 paths."
+      },
+      {
+        id: "path1_node",
+        step: "Path 1 · Direct",
+        name: "Direct Chat (No Tools, No RAG)",
+        io: "In: greeting / clarifying Q | Out: low-token direct reply",
+        paths: ["path1"],
+        detail: "Answers greetings, static help, or single clarifying questions immediately without invoking RAG or external tools."
+      },
+      {
+        id: "path2_node",
+        step: "Path 2 · Retrieval",
+        name: "Paginated Hybrid Self-RAG",
+        io: "In: query, page=1 | Out: CSV rows (chunk_id,article_id,section,score,text)",
+        paths: ["path2"],
+        detail: "Runs BM25 + dense vector search with RRF fusion (gate >= 0.45), grades ISREL/ISSUP, and retries page=2 if needed."
+      },
+      {
+        id: "path3_node",
+        step: "Path 3 · Tools & Sandbox",
+        name: "Deferred Tools & Sandbox",
+        io: "In: tool_name, args | Out: capped CSV rows (user/device/logs)",
+        paths: ["path3"],
+        detail: "Lazy-loads local tools and sandboxed diagnostics only when required, capping token output."
+      },
+      {
+        id: "path4_node",
+        step: "Path 4 · Escalation",
+        name: "HITL Gate & Team Router",
+        io: "In: unresolved/dissatisfied | Out: human approval -> routed ticket",
+        paths: ["path4"],
+        detail: "Triggered only when the user is dissatisfied or the agent cannot resolve. Routes strictly by category to the matching team and assignee."
+      },
+      {
+        id: "memory_compactor",
+        step: "Memory & Compaction",
+        name: "3-Tier Mem0 + Token Compactor",
+        io: "Shared: Semantic & Procedural | Thread-Scoped: Episodic",
+        paths: ["path1", "path2", "path3", "path4"],
+        detail: "Semantic & Procedural memories are shared across threads; Episodic memory stays scoped to thread_id. Approved tickets are persisted to memory."
+      }
+    ];
+
+    function switchView(view) {
+      const isChat = view === "chat";
+      document.getElementById("chatView").style.display = isChat ? "flex" : "none";
+      document.getElementById("archView").classList.toggle("active", !isChat);
+      document.getElementById("btnChatView").classList.toggle("active", isChat);
+      document.getElementById("btnArchView").classList.toggle("active", !isChat);
+      if (!isChat) renderArchitecture();
+    }
+
+    function renderThreads() {
+      const todayEl = document.getElementById("todayThreads");
+      const earlierEl = document.getElementById("earlierThreads");
+      todayEl.innerHTML = "";
+      earlierEl.innerHTML = "";
+
+      threads.forEach(t => {
+        const div = document.createElement("div");
+        div.className = "thread-item" + (t.id === activeThreadId ? " active" : "");
+        div.textContent = t.title;
+        div.onclick = () => {
+          activeThreadId = t.id;
+          renderThreads();
+          renderChat();
+        };
+        if (t.group === "today") todayEl.appendChild(div);
+        else earlierEl.appendChild(div);
+      });
+    }
+
+    function renderTickets() {
+      const container = document.getElementById("ticketsContainer");
+      const badge = document.getElementById("ticketCountBadge");
+      badge.textContent = String(tickets.length);
+      container.innerHTML = "";
+
+      tickets.forEach(tk => {
+        const isInProgress = tk.status === "In-Progress";
+        const card = document.createElement("div");
+        card.className = "ticket-card " + (isInProgress ? "in-progress" : "not-assigned");
+        card.innerHTML = `
+          <div class="ticket-top">
+            <span class="ticket-id">${tk.id} · ${tk.priority}</span>
+            <span class="status-chip">${tk.status}</span>
+          </div>
+          <div class="ticket-summary">${tk.title}</div>
+          <div class="ticket-meta-line">Category: <strong>${tk.category}</strong> · Team: <strong>${tk.team}</strong></div>
+          <div class="ticket-assignee">Assigned to: ${tk.assignee}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderChat() {
+      const scroll = document.getElementById("chatScroll");
+      const thread = threads.find(t => t.id === activeThreadId) || threads[0];
+      scroll.innerHTML = "";
+
+      thread.messages.forEach((m, idx) => {
+        const row = document.createElement("div");
+        row.className = "msg-row";
+
+        if (m.sender === "user") {
+          const uDiv = document.createElement("div");
+          uDiv.className = "msg-user";
+          uDiv.textContent = m.text;
+          row.appendChild(uDiv);
+        } else {
+          const aDiv = document.createElement("div");
+          aDiv.className = "msg-agent";
+
+          const meta = document.createElement("div");
+          meta.className = "agent-meta";
+          meta.innerHTML = `<span>OpsGate L1 Virtual Agent</span><span class="path-badge">${m.path || "L1 Agent"}</span>`;
+          aDiv.appendChild(meta);
+
+          const body = document.createElement("div");
+          body.innerHTML = m.text;
+          aDiv.appendChild(body);
+          if (m.trace && window.STAFF) { const tr = document.createElement("div"); tr.className = "agent-meta"; tr.style.marginTop = "8px"; tr.style.fontFamily = "var(--font-mono)"; tr.textContent = "trace: " + m.trace.join(" → "); aDiv.appendChild(tr); }
+
+          if (m.hitl) {
+            const routeInfo = BACKEND_TEAM_ROUTING[m.hitl.category] || {
+              team: "Workplace-Support",
+              assignee: "Suresh Kumar (L2 Support Engineer)"
+            };
+            const payloadObj = {
+              ticket_id: m.hitl.ticketId,
+              category: m.hitl.category,
+              priority: m.hitl.priority,
+              routed_team: routeInfo.team,
+              assigned_person: routeInfo.assignee,
+              steps_attempted: m.hitl.stepsAttempted
+            };
+
+            const card = document.createElement("div");
+            card.className = "hitl-card";
+            card.innerHTML = `
+              <div class="hitl-header">Unable to Resolve — Ticket Escalation Requires Your Approval</div>
+              <div class="hitl-desc">
+                This issue could not be resolved automatically. If you approve, the ticket will be routed to <strong>${routeInfo.team}</strong> and assigned to <strong>${routeInfo.assignee}</strong>, then stored in memory for future reference.
+              </div>
+              <div class="payload-box">${JSON.stringify(payloadObj, null, 2)}</div>
+            `;
+
+            if (!m.hitl.approved) {
+              const btns = document.createElement("div");
+              btns.className = "hitl-actions";
+
+              const approveBtn = document.createElement("button");
+              approveBtn.className = "btn-approve";
+              approveBtn.textContent = "Approve & Raise Ticket";
+              approveBtn.onclick = () => approveTicket(thread.id, idx, payloadObj, routeInfo);
+
+              const cancelBtn = document.createElement("button");
+              cancelBtn.className = "btn-cancel";
+              cancelBtn.textContent = "Do Not Raise";
+              cancelBtn.onclick = () => {
+                emit('reject',{thread:thread.id,draft:m.hitl.ticketId});
+              };
+
+              btns.appendChild(approveBtn);
+              btns.appendChild(cancelBtn);
+              card.appendChild(btns);
+            } else {
+              const done = document.createElement("div");
+              done.className = "confirmed-banner";
+              done.textContent = `Approved & Raised (${m.hitl.ticketId}) -> Routed to ${routeInfo.team} (${routeInfo.assignee}) and saved to memory.`;
+              card.appendChild(done);
+            }
+
+            aDiv.appendChild(card);
+          }
+
+          row.appendChild(aDiv);
+        }
+
+        scroll.appendChild(row);
+      });
+
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function approveTicket(threadId, msgIdx, payload, routeInfo) {
+      const thread = threads.find(t => t.id === threadId);
+      if (!thread || !thread.messages[msgIdx] || !thread.messages[msgIdx].hitl) return;
+
+      thread.messages[msgIdx].hitl.approved = true;
+
+      // Backend routing rule: route strictly by ticket category to respective team & person
+      tickets.unshift({
+        id: payload.ticket_id,
+        title: `${payload.category} — Escalated via L1 Agent`,
+        category: payload.category,
+        priority: payload.priority,
+        status: "In-Progress",
+        team: routeInfo.team,
+        assignee: routeInfo.assignee
+      });
+
+      renderTickets();
+      renderChat();
+    }
+
+    function startNewThread() {
+      const newId = "t-" + (threads.length + 1);
+      threads.unshift({
+        id: newId,
+        group: "today",
+        title: "New Support Chat",
+        messages: [
+          {
+            sender: "agent",
+            path: "Path 1 · Direct Chat",
+            text: "Hello! I am the <strong>OpsGate L1 Virtual Agent</strong>. Ask me about VPN, MFA, Outlook, or printers."
+          }
+        ]
+      });
+      activeThreadId = newId;
+      renderThreads();
+      renderChat();
+    }
+
+    function runQuickPrompt(text) {
+      document.getElementById("promptInput").value = text;
+      sendMessage();
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("promptInput");
+      const raw = input.value.trim();
+      if (!raw) return;
+
+      const thread = threads.find(t => t.id === activeThreadId) || threads[0];
+      if (thread.title === "New Support Chat") {
+        thread.title = raw.slice(0, 28);
+        renderThreads();
+      }
+
+      thread.messages.push({ sender: "user", text: raw });
+      input.value = "";
+
+      const lower = raw.toLowerCase();
+      const wantsEscalation =
+        lower.includes("cannot resolve") ||
+        lower.includes("still can't") ||
+        lower.includes("error 809") ||
+        lower.includes("not satisfied") ||
+        lower.includes("raise a ticket") ||
+        lower.includes("ticket");
+
+      if (wantsEscalation) {
+        const cat = lower.includes("mfa") ? "Identity/MFA" : lower.includes("outlook") ? "Messaging/Outlook" : "Network/VPN";
+        const newNum = 1411 + tickets.length;
+        thread.messages.push({
+          sender: "agent",
+          path: "Path 4 · Unresolved -> HITL Gate",
+          text: `I could not resolve this issue automatically with existing troubleshooting steps. You can approve raising a ticket below, and it will be routed directly to the matching team.`,
+          hitl: {
+            ticketId: `INC00${newNum}`,
+            category: cat,
+            urgency: "Medium",
+            impact: "Individual",
+            priority: "P3",
+            stepsAttempted: ["Checked KB guidance", "Recorded user unresolved status"],
+            approved: false
+          }
+        });
+      } else if (lower.includes("hi") || lower.includes("hello") || lower.includes("who are you") || lower.includes("what it issues")) {
+        thread.messages.push({
+          sender: "agent",
+          path: "Path 1 · Direct Chat",
+          text: `I am the <strong>OpsGate L1 Virtual Agent</strong> for IT support. I can help with VPN, MFA, Outlook, and printer troubleshooting—and escalate unresolved issues to the right support team with your approval.`
+        });
+      } else if (lower.includes("tool") || lower.includes("sandbox") || lower.includes("context") || lower.includes("log")) {
+        thread.messages.push({
+          sender: "agent",
+          path: "Path 3 · Tools & Sandbox",
+          text: `Checked your device profile (<code>macOS</code>, <code>MacBook-Pro-09</code>) and recent diagnostic log excerpt. No local daemon crash found; if VPN still fails, let me know and I can prepare a ticket for <strong>Network-Ops</strong>.`
+        });
+      } else {
+        thread.messages.push({
+          sender: "agent",
+          path: "Path 2 · Hybrid Self-RAG",
+          text: `Retrieved guidance from <span class="cite-tag">KB-102 §2.1</span>: verify your VPN gateway, check network connectivity, and confirm whether a specific error code appears.`
+        });
+      }
+
+      renderChat();
+    }
+
+    function highlightPath(pathId, btnEl) {
+      document.querySelectorAll(".sim-btn").forEach(b => b.classList.remove("active"));
+      if (btnEl) btnEl.classList.add("active");
+
+      document.querySelectorAll(".node-card").forEach(card => {
+        const allowed = (card.dataset.paths || "").split(",");
+        card.classList.toggle("highlighted", allowed.includes(pathId));
+      });
+    }
+
+    function renderArchitecture() {
+      const canvas = document.getElementById("graphCanvas");
+      canvas.innerHTML = "";
+
+      archNodes.forEach(n => {
+        const card = document.createElement("div");
+        card.className = "node-card highlighted";
+        card.dataset.paths = n.paths.join(",");
+        card.innerHTML = `
+          <div class="node-step">${n.step}</div>
+          <div class="node-name">${n.name}</div>
+          <div class="node-io">${n.io}</div>
+        `;
+        card.onclick = () => {
+          document.getElementById("inspectorBody").innerHTML = `
+            <div><strong>${n.name}</strong> (${n.step})</div>
+            <div style="margin-top:4px; color:var(--text-secondary);">${n.detail}</div>
+            <pre>${JSON.stringify({
+              node_id: n.id,
+              io_contract: n.io,
+              backend_team_routing: BACKEND_TEAM_ROUTING
+            }, null, 2)}</pre>
+          `;
+        };
+        canvas.appendChild(card);
+      });
+    }
+
+    // Streamlit component bridge: backend owns chat and approvals.
+    function post(type, extra={}) { window.parent.postMessage({isStreamlitMessage:true,type,...extra}, '*'); }
+    function emit(kind,extra={}) { post('streamlit:setComponentValue',{value:{kind,thread:activeThreadId,nonce:crypto.randomUUID(),...extra},dataType:'json'}); }
+    startNewThread=()=>emit('new');
+    sendMessage=()=>{const i=document.getElementById('promptInput'); if(i.value.trim()){emit('chat',{text:i.value.trim()});i.value='';}};
+    approveTicket=(threadId,idx,payload)=>emit('approve',{thread:threadId,draft:payload.ticket_id});
+    window.addEventListener('message',e=>{if(e.source!==window.parent||e.data.type!=='streamlit:render')return; const a=e.data.args; window.STAFF=!!a.staff;document.getElementById('btnArchView').style.display=window.STAFF?'':'none';threads=a.state.threads;tickets=a.state.tickets;activeThreadId=a.active;renderThreads();renderTickets();renderChat();post('streamlit:setFrameHeight',{height:Math.max(650,800)});});
+    post('streamlit:componentReady',{apiVersion:1});post('streamlit:setFrameHeight',{height:800});
+  </script></body></html>

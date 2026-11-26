@@ -1,0 +1,1028 @@
+{
+ "uid": "opsgate-perf",
+ "title": "OpsGate | Agent Performance (staff only)",
+ "tags": [
+  "opsgate",
+  "staff-only"
+ ],
+ "timezone": "browser",
+ "refresh": "10s",
+ "schemaVersion": 39,
+ "editable": false,
+ "graphTooltip": 1,
+ "time": {
+  "from": "now-1h",
+  "to": "now"
+ },
+ "panels": [
+  {
+   "id": 1,
+   "type": "row",
+   "title": "Overview - click a route in the bar chart to drill down; use the variables above to filter",
+   "collapsed": false,
+   "gridPos": {
+    "x": 0,
+    "y": 0,
+    "w": 24,
+    "h": 1
+   },
+   "panels": []
+  },
+  {
+   "id": 2,
+   "type": "stat",
+   "title": "Handled turns",
+   "description": "All chat turns, including blocked ones.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 1,
+    "w": 4,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_turns_total{route=~\"$route\"}[$__range]))",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "graphMode": "area",
+    "colorMode": "value",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 3,
+   "type": "stat",
+   "title": "Resolution confirmations",
+   "description": "Explicit user \"resolved\" confirmations / answered (RAG+tools) turns. Not a measured L1 resolution rate.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 4,
+    "y": 1,
+    "w": 4,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "100*(sum(increase(opsgate_resolved_total{route=~\"$route\"}[$__range])))/clamp_min(sum(increase(opsgate_turns_total{route=~\"rag|tools\"}[$__range])),1)",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percent"
+    },
+    "overrides": []
+   },
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 4,
+   "type": "stat",
+   "title": "Escalation rate",
+   "description": "HITL turns / all turns.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 8,
+    "y": 1,
+    "w": 4,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "100*(sum(increase(opsgate_turns_total{route=\"hitl\"}[$__range])))/clamp_min(sum(increase(opsgate_turns_total{}[$__range])),1)",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percent"
+    },
+    "overrides": []
+   },
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 5,
+   "type": "stat",
+   "title": "Abstain rate",
+   "description": "Retrieval found no adequate evidence -> agent declined to guess.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 1,
+    "w": 4,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "100*(sum(increase(opsgate_retrieval_total{outcome=\"abstained\"}[$__range])))/clamp_min(sum(increase(opsgate_retrieval_total{}[$__range])),1)",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "percent"
+    },
+    "overrides": []
+   },
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 6,
+   "type": "stat",
+   "title": "Guardrail blocks",
+   "description": "Injection, secrets, unsafe, oversize, rate-limit blocks.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 16,
+    "y": 1,
+    "w": 4,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_guardrail_blocks_total{}[$__range]))",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "graphMode": "area",
+    "colorMode": "value",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 7,
+   "type": "stat",
+   "title": "Engine errors",
+   "description": "Failed engine events (all types).",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 20,
+    "y": 1,
+    "w": 4,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_errors_total{}[$__range]))",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "graphMode": "area",
+    "colorMode": "value",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 8,
+   "type": "bargauge",
+   "title": "Turns by route (click to drill down)",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 5,
+    "w": 8,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(route)(increase(opsgate_turns_total{route=~\"$route\"}[$__range]))",
+     "legendFormat": "{{route}}",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "links": [
+      {
+       "title": "Drill into this route",
+       "url": "/d/opsgate-perf?var-route=${__field.labels.route}&${__url_time_range}",
+       "targetBlank": false
+      }
+     ]
+    },
+    "overrides": []
+   },
+   "options": {
+    "displayMode": "gradient",
+    "orientation": "horizontal"
+   }
+  },
+  {
+   "id": 9,
+   "type": "piechart",
+   "title": "Route mix",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 8,
+    "y": 5,
+    "w": 6,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(route)(increase(opsgate_turns_total{route=~\"$route\"}[$__range]))",
+     "legendFormat": "{{route}}",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "pieType": "donut",
+    "legend": {
+     "displayMode": "table",
+     "placement": "right",
+     "values": [
+      "percent"
+     ]
+    }
+   }
+  },
+  {
+   "id": 10,
+   "type": "timeseries",
+   "title": "Turn throughput / min",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 14,
+    "y": 5,
+    "w": 10,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(route)(rate(opsgate_turns_total{route=~\"$route\"}[$__rate_interval]))*60",
+     "legendFormat": "{{route}}",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "fillOpacity": 25,
+      "stacking": {
+       "mode": "normal"
+      },
+      "lineWidth": 1
+     }
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "bottom",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   }
+  },
+  {
+   "id": 11,
+   "type": "row",
+   "title": "Quality & safety",
+   "collapsed": false,
+   "gridPos": {
+    "x": 0,
+    "y": 12,
+    "w": 24,
+    "h": 1
+   },
+   "panels": []
+  },
+  {
+   "id": 12,
+   "type": "bargauge",
+   "title": "Guardrail blocks by reason",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 13,
+    "w": 6,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(reason)(increase(opsgate_guardrail_blocks_total[$__range]))",
+     "legendFormat": "{{reason}}",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "displayMode": "basic",
+    "orientation": "horizontal"
+   }
+  },
+  {
+   "id": 13,
+   "type": "timeseries",
+   "title": "Retrieval outcomes",
+   "description": "grounded = cited evidence; retried = one query rewrite; abstained = no adequate evidence.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 6,
+    "y": 13,
+    "w": 9,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(outcome)(increase(opsgate_retrieval_total[$__rate_interval]))",
+     "legendFormat": "{{outcome}}",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "fillOpacity": 25,
+      "stacking": {
+       "mode": "normal"
+      },
+      "lineWidth": 1
+     }
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "bottom",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   }
+  },
+  {
+   "id": 14,
+   "type": "table",
+   "title": "Simulated tool calls (filter with $tool)",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 15,
+    "y": 13,
+    "w": 9,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(tool,status)(increase(opsgate_tool_calls_total{tool=~\"$tool\"}[$__range]))",
+     "legendFormat": "{{tool}} / {{status}}",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {},
+   "transformations": [
+    {
+     "id": "seriesToRows",
+     "options": {}
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "type": "row",
+   "title": "Performance & cost",
+   "collapsed": false,
+   "gridPos": {
+    "x": 0,
+    "y": 20,
+    "w": 24,
+    "h": 1
+   },
+   "panels": []
+  },
+  {
+   "id": 16,
+   "type": "timeseries",
+   "title": "Latency p50 / p95 (local, per route)",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 21,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "histogram_quantile(0.5,sum by(le,route)(rate(opsgate_latency_seconds_bucket{route=~\"$route\"}[$__rate_interval])))",
+     "legendFormat": "p50 {{route}}",
+     "instant": false,
+     "range": true
+    },
+    {
+     "refId": "B",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "histogram_quantile(0.95,sum by(le,route)(rate(opsgate_latency_seconds_bucket{route=~\"$route\"}[$__rate_interval])))",
+     "legendFormat": "p95 {{route}}",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "bottom",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   }
+  },
+  {
+   "id": 17,
+   "type": "timeseries",
+   "title": "Tokens / min (provider vs estimated - see $source)",
+   "description": "source=estimated is chars/4 in DEMO_MODE. cached is shown only when the provider returns it.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 21,
+    "w": 12,
+    "h": 8
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(kind,source)(rate(opsgate_tokens_total{route=~\"$route\",source=~\"$source\"}[$__rate_interval]))*60",
+     "legendFormat": "{{kind}} ({{source}})",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "bottom",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   }
+  },
+  {
+   "id": 18,
+   "type": "stat",
+   "title": "Avg input tokens / answered turn",
+   "description": "Mixes sources if both selected.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 29,
+    "w": 6,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_tokens_total{kind=\"input\",source=~\"$source\"}[$__range]))/clamp_min(sum(increase(opsgate_turns_total{route=~\"rag|tools\"}[$__range])),1)",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "graphMode": "area",
+    "colorMode": "value",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 19,
+   "type": "stat",
+   "title": "Cached tokens (provider only)",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 6,
+    "y": 29,
+    "w": 6,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_tokens_total{kind=\"cached\",source=\"provider\"}[$__range]))",
+     "legendFormat": "",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "graphMode": "area",
+    "colorMode": "value",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ]
+    }
+   }
+  },
+  {
+   "id": 20,
+   "type": "timeseries",
+   "title": "Model retries & deterministic fallbacks",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 29,
+    "w": 12,
+    "h": 4
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_llm_retries_total[$__rate_interval]))",
+     "legendFormat": "retries (429/5xx)",
+     "instant": false,
+     "range": true
+    },
+    {
+     "refId": "B",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(reason)(increase(opsgate_llm_fallbacks_total[$__rate_interval]))",
+     "legendFormat": "fallback: {{reason}}",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "bottom",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   }
+  },
+  {
+   "id": 21,
+   "type": "row",
+   "title": "Human approval & tickets (global)",
+   "collapsed": false,
+   "gridPos": {
+    "x": 0,
+    "y": 33,
+    "w": 24,
+    "h": 1
+   },
+   "panels": []
+  },
+  {
+   "id": 22,
+   "type": "bargauge",
+   "title": "Approval funnel",
+   "description": "approve/reject/expired/invalid. Tickets are MOCK; no real ITSM.",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 0,
+    "y": 34,
+    "w": 12,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_drafts_total{}[$__range]))",
+     "legendFormat": "drafts proposed",
+     "instant": true,
+     "range": false
+    },
+    {
+     "refId": "B",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(decision)(increase(opsgate_approvals_total[$__range]))",
+     "legendFormat": "decision: {{decision}}",
+     "instant": true,
+     "range": false
+    },
+    {
+     "refId": "C",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum(increase(opsgate_tickets_total{}[$__range]))",
+     "legendFormat": "tickets created",
+     "instant": true,
+     "range": false
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "displayMode": "basic",
+    "orientation": "horizontal"
+   }
+  },
+  {
+   "id": 23,
+   "type": "timeseries",
+   "title": "Errors by type",
+   "description": "",
+   "datasource": {
+    "type": "prometheus",
+    "uid": "opsgate-prom"
+   },
+   "gridPos": {
+    "x": 12,
+    "y": 34,
+    "w": 12,
+    "h": 7
+   },
+   "targets": [
+    {
+     "refId": "A",
+     "datasource": {
+      "type": "prometheus",
+      "uid": "opsgate-prom"
+     },
+     "expr": "sum by(type)(increase(opsgate_errors_total[$__rate_interval]))",
+     "legendFormat": "{{type}}",
+     "instant": false,
+     "range": true
+    }
+   ],
+   "fieldConfig": {
+    "defaults": {},
+    "overrides": []
+   },
+   "options": {
+    "legend": {
+     "displayMode": "table",
+     "placement": "bottom",
+     "calcs": [
+      "mean",
+      "max"
+     ]
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "desc"
+    }
+   }
+  }
+ ],
+ "templating": {
+  "list": [
+   {
+    "name": "route",
+    "label": "Route",
+    "type": "query",
+    "datasource": {
+     "type": "prometheus",
+     "uid": "opsgate-prom"
+    },
+    "query": {
+     "query": "label_values(opsgate_turns_total,route)",
+     "refId": "v"
+    },
+    "refresh": 2,
+    "multi": true,
+    "includeAll": true,
+    "allValue": ".*",
+    "current": {
+     "text": "All",
+     "value": "$__all"
+    }
+   },
+   {
+    "name": "source",
+    "label": "Token source",
+    "type": "custom",
+    "query": "estimated,provider",
+    "multi": true,
+    "includeAll": true,
+    "allValue": ".*",
+    "current": {
+     "text": "All",
+     "value": "$__all"
+    },
+    "options": []
+   },
+   {
+    "name": "tool",
+    "label": "Tool",
+    "type": "query",
+    "datasource": {
+     "type": "prometheus",
+     "uid": "opsgate-prom"
+    },
+    "query": {
+     "query": "label_values(opsgate_tool_calls_total,tool)",
+     "refId": "v"
+    },
+    "refresh": 2,
+    "multi": true,
+    "includeAll": true,
+    "allValue": ".*",
+    "current": {
+     "text": "All",
+     "value": "$__all"
+    }
+   }
+  ]
+ },
+ "links": [
+  {
+   "title": "Reset filters",
+   "type": "link",
+   "url": "/d/opsgate-perf",
+   "icon": "dashboard"
+  }
+ ],
+ "description": "Internal observability for IT team and developers. Aggregate metrics only - no user IDs, thread IDs or prompts. Prometheus counters reset on restart."
+}

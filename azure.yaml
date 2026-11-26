@@ -1,0 +1,21 @@
+name: opsgate-l1-agent
+infra:
+  provider: microsoft.foundry
+services:
+  opsgate-agent:
+    name: opsgate-l1-agent
+    host: azure.ai.agent
+    kind: hosted
+    language: python
+    project: ./
+    codeConfiguration:
+      runtime: python_3_13
+      entryPoint: main.py
+      dependencyResolution: remote_build
+    container:
+      resources:
+        cpu: "0.5"
+        memory: 1Gi
+    protocols:
+      - protocol: responses
+        version: 2.0.0

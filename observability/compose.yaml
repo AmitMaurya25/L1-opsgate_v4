@@ -1,0 +1,28 @@
+# Staff-only monitoring (IT team + developers). Run from this folder: `docker compose up -d` (needs GRAFANA_PASSWORD in .env).
+# Grafana binds to localhost only: expose it through your VPN / SSO reverse proxy, never publicly. Employees get no link to it from the chat UI.
+services:
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    extra_hosts:
+      - host.docker.internal:host-gateway
+  grafana:
+    image: grafana/grafana:12.1.0
+    ports: ['127.0.0.1:3000:3000']
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Set GRAFANA_PASSWORD in .env}
+      GF_AUTH_ANONYMOUS_ENABLED: "false"        # no anonymous access
+      GF_USERS_ALLOW_SIGN_UP: "false"           # staff accounts are created by an admin (Viewer role) or via SSO
+      GF_USERS_DEFAULT_THEME: light             # matches the chat UI theme
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/performance.json
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on: [prometheus]
+volumes:
+  prometheus-data:
+  grafana-data:

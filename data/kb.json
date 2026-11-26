@@ -1,0 +1,568 @@
+[
+ {
+  "chunk_id": "KB-102-1.1",
+  "article_id": "KB-102",
+  "section": "1.1",
+  "title": "VPN: first checks",
+  "text": "Confirm your internet works by opening any website. Open Cisco AnyConnect and verify the gateway is vpn.corp.local. Disconnect other VPN or proxy tools, then reconnect.",
+  "tags": [
+   "vpn",
+   "network",
+   "connect",
+   "macos",
+   "windows",
+   "anyconnect"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "c642cb1103b0"
+ },
+ {
+  "chunk_id": "KB-102-2.1",
+  "article_id": "KB-102",
+  "section": "2.1",
+  "title": "VPN Error 809",
+  "text": "Error 809 means the VPN tunnel could not be established, usually because UDP 500/4500 is blocked on the current network. Switch to another network or a mobile hotspot, restart AnyConnect and reconnect. If it persists, escalate to Network-Ops with the error code.",
+  "tags": [
+   "vpn",
+   "error",
+   "809",
+   "tunnel",
+   "udp",
+   "blocked"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "d9c54465eba0"
+ },
+ {
+  "chunk_id": "KB-102-2.2",
+  "article_id": "KB-102",
+  "section": "2.2",
+  "title": "VPN Error 619",
+  "text": "Error 619 means the remote gateway ended the session. Make sure you are not already connected on another device, wait two minutes, then reconnect.",
+  "tags": [
+   "vpn",
+   "error",
+   "619",
+   "disconnect",
+   "terminated",
+   "session"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "d6cb6377f7a6"
+ },
+ {
+  "chunk_id": "KB-102-3.1",
+  "article_id": "KB-102",
+  "section": "3.1",
+  "title": "VPN certificate warning",
+  "text": "Never accept or bypass a certificate warning. Confirm the gateway name is vpn.corp.local and report the warning to Network-Ops through a ticket.",
+  "tags": [
+   "vpn",
+   "certificate",
+   "warning",
+   "security"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "5738a509fe98"
+ },
+ {
+  "chunk_id": "KB-102-3.2",
+  "article_id": "KB-102",
+  "section": "3.2",
+  "title": "VPN connected but intranet not loading",
+  "text": "If the VPN shows connected but intranet sites do not load, flush the DNS cache (Windows: ipconfig /flushdns), disconnect and reconnect, then test an internal site again.",
+  "tags": [
+   "vpn",
+   "dns",
+   "intranet",
+   "internal",
+   "sites",
+   "connected"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "5ebf964ad5f6"
+ },
+ {
+  "chunk_id": "KB-102-3.3",
+  "article_id": "KB-102",
+  "section": "3.3",
+  "title": "VPN keeps asking for MFA",
+  "text": "Approve the Microsoft Authenticator push within 60 seconds and make sure the phone date and time are set to automatic. If prompts keep looping, see KB-301 or raise an MFA ticket.",
+  "tags": [
+   "vpn",
+   "mfa",
+   "prompt",
+   "loop",
+   "authenticator"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "b948b3b937a6"
+ },
+ {
+  "chunk_id": "KB-301-1.1",
+  "article_id": "KB-301",
+  "section": "1.1",
+  "title": "MFA push not received",
+  "text": "Open Microsoft Authenticator manually, check the phone has internet access, allow notifications for the app, then request a new push.",
+  "tags": [
+   "mfa",
+   "authenticator",
+   "push",
+   "notification",
+   "phone"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "149b59cfd735"
+ },
+ {
+  "chunk_id": "KB-301-2.1",
+  "article_id": "KB-301",
+  "section": "2.1",
+  "title": "Lost or replaced phone (privileged)",
+  "text": "MFA reset for a lost or replaced device cannot be done by L1 support. IAM must verify your identity first, so a ticket to IAM-L2 is raised with your approval.",
+  "tags": [
+   "mfa",
+   "lost",
+   "phone",
+   "replaced",
+   "device",
+   "reset",
+   "identity"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "9f5998076bc8"
+ },
+ {
+  "chunk_id": "KB-301-2.2",
+  "article_id": "KB-301",
+  "section": "2.2",
+  "title": "MFA code rejected",
+  "text": "Set the phone time to automatic. Codes are valid for about 30 seconds, so wait for a fresh code and enter it promptly.",
+  "tags": [
+   "mfa",
+   "code",
+   "rejected",
+   "invalid",
+   "time"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "9921ea1a086c"
+ },
+ {
+  "chunk_id": "KB-310-1.1",
+  "article_id": "KB-310",
+  "section": "1.1",
+  "title": "Account locked",
+  "text": "Accounts unlock automatically after 30 minutes. Use the self-service password portal to unlock sooner. Never share your password with anyone, including support.",
+  "tags": [
+   "account",
+   "locked",
+   "lockout",
+   "login",
+   "password"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "0eac142b1b74"
+ },
+ {
+  "chunk_id": "KB-310-1.2",
+  "article_id": "KB-310",
+  "section": "1.2",
+  "title": "Password expired or reset",
+  "text": "Use the self-service password reset portal and choose a new password of at least 12 characters that you have not used before.",
+  "tags": [
+   "password",
+   "expired",
+   "reset",
+   "change",
+   "self-service"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "f94c2307a9d3"
+ },
+ {
+  "chunk_id": "KB-204-1.1",
+  "article_id": "KB-204",
+  "section": "1.1",
+  "title": "Outlook not syncing",
+  "text": "Check the Outlook status bar and turn off Working Offline. Check service health, then restart Outlook.",
+  "tags": [
+   "outlook",
+   "email",
+   "mail",
+   "sync",
+   "offline"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "0e51a18d0209"
+ },
+ {
+  "chunk_id": "KB-204-1.2",
+  "article_id": "KB-204",
+  "section": "1.2",
+  "title": "Rebuild Outlook profile",
+  "text": "Open Control Panel, then Mail, create a new profile and sign in with your corporate UPN. Set it as the default profile and restart Outlook.",
+  "tags": [
+   "outlook",
+   "profile",
+   "rebuild",
+   "mail",
+   "control",
+   "panel"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "4c7ecdafa389"
+ },
+ {
+  "chunk_id": "KB-204-2.1",
+  "article_id": "KB-204",
+  "section": "2.1",
+  "title": "Outlook asks for password repeatedly",
+  "text": "Sign out of all Office apps, remove cached Office entries in Credential Manager, then sign in again and approve MFA.",
+  "tags": [
+   "outlook",
+   "password",
+   "prompt",
+   "credentials",
+   "sign",
+   "in"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "9fade3390b28"
+ },
+ {
+  "chunk_id": "KB-204-2.2",
+  "article_id": "KB-204",
+  "section": "2.2",
+  "title": "Mailbox full",
+  "text": "Archive or delete large items, empty Deleted Items and check the mailbox quota in account settings. Quota increases require a ticket.",
+  "tags": [
+   "outlook",
+   "mailbox",
+   "full",
+   "quota",
+   "storage"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "b2c536c17486"
+ },
+ {
+  "chunk_id": "KB-210-1.1",
+  "article_id": "KB-210",
+  "section": "1.1",
+  "title": "No audio in Teams",
+  "text": "Check the selected speaker and microphone in Teams device settings, make a test call, restart Teams and install pending updates.",
+  "tags": [
+   "teams",
+   "audio",
+   "microphone",
+   "speaker",
+   "meeting",
+   "call",
+   "sound"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "ce1399400312"
+ },
+ {
+  "chunk_id": "KB-401-1.1",
+  "article_id": "KB-401",
+  "section": "1.1",
+  "title": "Printer offline",
+  "text": "Check the printer power and network cable or Wi-Fi, set it as the default printer, clear the print queue and print a test page.",
+  "tags": [
+   "printer",
+   "offline",
+   "hardware",
+   "print"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "0c833e0b34a8"
+ },
+ {
+  "chunk_id": "KB-401-1.2",
+  "article_id": "KB-401",
+  "section": "1.2",
+  "title": "Print queue stuck",
+  "text": "Cancel all documents in the queue, restart the Print Spooler service from Services, then resend a single job.",
+  "tags": [
+   "printer",
+   "print",
+   "queue",
+   "stuck",
+   "jobs",
+   "spooler"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "fe4fa1e9b455"
+ },
+ {
+  "chunk_id": "KB-401-1.3",
+  "article_id": "KB-401",
+  "section": "1.3",
+  "title": "Cannot find network printer",
+  "text": "Add the printer using the approved print server path from the service catalog and confirm you are on the corporate network or VPN.",
+  "tags": [
+   "printer",
+   "network",
+   "find",
+   "add",
+   "server"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "b8b85017ffdf"
+ },
+ {
+  "chunk_id": "KB-110-1.1",
+  "article_id": "KB-110",
+  "section": "1.1",
+  "title": "Wi-Fi connected but no internet",
+  "text": "Forget and rejoin the corporate Wi-Fi, restart the device and try a wired connection. Check service health for network outages.",
+  "tags": [
+   "wifi",
+   "wireless",
+   "internet",
+   "network",
+   "dns"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "033f9f0fb124"
+ },
+ {
+  "chunk_id": "KB-110-1.2",
+  "article_id": "KB-110",
+  "section": "1.2",
+  "title": "Slow network",
+  "text": "Run a speed test, close bandwidth-heavy apps and move closer to the access point. Report repeated slowness with the location and time.",
+  "tags": [
+   "network",
+   "slow",
+   "speed",
+   "latency",
+   "wifi"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "b257eebcd6e9"
+ },
+ {
+  "chunk_id": "KB-501-1.1",
+  "article_id": "KB-501",
+  "section": "1.1",
+  "title": "Laptop running slow",
+  "text": "Restart the device, close unused apps, keep at least 10 percent disk space free and install pending updates.",
+  "tags": [
+   "laptop",
+   "slow",
+   "performance",
+   "disk",
+   "memory",
+   "endpoint"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "5cc4efef65e9"
+ },
+ {
+  "chunk_id": "KB-501-1.2",
+  "article_id": "KB-501",
+  "section": "1.2",
+  "title": "Software install request",
+  "text": "Install only from the approved Software Center. Other software requires an approved request through a ticket.",
+  "tags": [
+   "software",
+   "install",
+   "approved",
+   "center"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "1def3feacc4d"
+ },
+ {
+  "chunk_id": "KB-601-1.1",
+  "article_id": "KB-601",
+  "section": "1.1",
+  "title": "311 grievance status",
+  "text": "Look up a grievance with its reference ID (format GRV-123456). Status shown in this demo is synthetic fixture data, not live NDMC data.",
+  "tags": [
+   "ndmc",
+   "311",
+   "grievance",
+   "status",
+   "reference",
+   "civic"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "f2c83b08550f"
+ },
+ {
+  "chunk_id": "KB-601-1.2",
+  "article_id": "KB-601",
+  "section": "1.2",
+  "title": "Water and electricity complaints",
+  "text": "Water supply status is checked by ward number. Do not share consumer or personal identifiers in chat. Demo fixtures only.",
+  "tags": [
+   "ndmc",
+   "water",
+   "electricity",
+   "supply",
+   "ward",
+   "civic"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "4e0e17c0c21b"
+ },
+ {
+  "chunk_id": "KB-601-1.3",
+  "article_id": "KB-601",
+  "section": "1.3",
+  "title": "Certificate services portal",
+  "text": "For certificate portal problems check service status first, then raise a ticket to NDMC-Portal-Ops with the reference ID.",
+  "tags": [
+   "ndmc",
+   "certificate",
+   "portal",
+   "birth",
+   "death",
+   "trade",
+   "service"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "87a6c8a542c3"
+ },
+ {
+  "chunk_id": "KB-701-1.1",
+  "article_id": "KB-701",
+  "section": "1.1",
+  "title": "Escalation policy",
+  "text": "Escalate when two troubleshooting attempts fail, the issue is privileged (identity or access), or the user asks. Priority is set from impact and urgency.",
+  "tags": [
+   "escalation",
+   "policy",
+   "ticket",
+   "priority",
+   "impact",
+   "urgency"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "71cdb6598acd"
+ },
+ {
+  "chunk_id": "KB-701-1.2",
+  "article_id": "KB-701",
+  "section": "1.2",
+  "title": "Service health first",
+  "text": "Check service health before troubleshooting. If a service is degraded, wait for the incident update instead of repeating resets.",
+  "tags": [
+   "service",
+   "health",
+   "outage",
+   "degraded",
+   "incident"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "f10a5a915b0a"
+ },
+ {
+  "chunk_id": "KB-702-1.1",
+  "article_id": "KB-702",
+  "section": "1.1",
+  "title": "Security basics",
+  "text": "Never share passwords, MFA codes or tokens. IT staff never ask for them. Report phishing emails to the security mailbox.",
+  "tags": [
+   "security",
+   "phishing",
+   "password",
+   "mfa",
+   "code",
+   "token"
+  ],
+  "version": "1.0",
+  "effective": "2026-11-01",
+  "source": "synthetic",
+  "scope": "all-employees",
+  "checksum": "3d199947637f"
+ }
+]
